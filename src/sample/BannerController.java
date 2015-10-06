@@ -16,6 +16,7 @@ public class BannerController {
         // Start polling timer: update banner every two seconds
         pollingTimer = new Timer();
         // TODO
+        // banner.setKoersen();
     }
 
     // Stop banner controller
@@ -23,5 +24,6 @@ public class BannerController {
         pollingTimer.cancel();
         // Stop simulation timer of effectenbeurs
         // TODO
+        banner.stop();
     }
 }
