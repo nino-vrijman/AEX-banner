@@ -31,7 +31,6 @@ public class AEXBanner extends Application {
         text = new Text();
         text.setFont(font);
         text.setFill(Color.BLACK);
-        text.setText("pls");
 
         Pane root = new Pane();
         root.getChildren().add(text);
@@ -51,8 +50,8 @@ public class AEXBanner extends Application {
                 long lag = now - prevUpdate;
                 if (lag <= NANO_TICKS) {
                     // calculate new location of text
-                textPosition = textPosition - 5;
-                    if(textPosition < 0 - text.getLayoutBounds().getWidth()){
+                textPosition = textPosition - 3;
+                    if(textPosition < 0 - textLength){
                         textPosition = scene.getWidth();
                     }
                 }
@@ -64,8 +63,7 @@ public class AEXBanner extends Application {
                 prevUpdate = System.nanoTime();
                 textPosition = WIDTH;
                 text.relocate(textPosition, 0);
-                //  Onderstaande regel moet uitgecomment worden als er 'live' koersgegevens beschikbaar zijn
-                setKoersen("Nothing to display");
+                //setKoersen("Nothing to display");
                 super.start();
             }
         };

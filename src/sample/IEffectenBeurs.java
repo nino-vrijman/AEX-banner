@@ -7,4 +7,5 @@ import java.util.List;
  */
 public interface IEffectenBeurs {
     public List<IFonds> getKoersen();
+    public void genereerKoersen();
 }

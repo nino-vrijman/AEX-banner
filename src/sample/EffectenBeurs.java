@@ -8,8 +8,17 @@ import java.util.List;
  */
 public class EffectenBeurs implements IEffectenBeurs {
     ArrayList<IFonds> koersen;
+
     @Override
     public List<IFonds> getKoersen() {
         return koersen;
+        //  Door dit naar return null te veranderen worden de koersgegevens niet dubbel weergegeven.
+//        return null;
+    }
+
+    @Override
+    public void genereerKoersen()
+    {
+
     }
 }
