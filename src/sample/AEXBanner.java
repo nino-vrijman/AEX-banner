@@ -48,15 +48,15 @@ public class AEXBanner extends Application {
             @Override
             public void handle(long now) {
                 long lag = now - prevUpdate;
-                if (lag <= NANO_TICKS) {
+                if (lag >= NANO_TICKS) {
                     // calculate new location of text
                 textPosition = textPosition - 3;
                     if(textPosition < 0 - textLength){
                         textPosition = scene.getWidth();
                     }
+                    text.relocate(textPosition,0);
+                    prevUpdate = now;
                 }
-                text.relocate(textPosition,0);
-                prevUpdate = now;
             }
             @Override
             public void start() {
