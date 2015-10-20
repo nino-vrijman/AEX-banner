@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="FontysObserver">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Fontys Observer/FontysObserver.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
