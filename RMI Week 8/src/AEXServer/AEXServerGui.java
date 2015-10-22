@@ -2,10 +2,13 @@ package AEXServer;/**
  * Created by Kevin on 20-10-2015.
  */
 
+import AEXClient.BannerController;
+import AEXClient.IBanner;
 import Shared.IFonds;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -40,6 +43,7 @@ public class AEXServerGui extends Application {
         catch (RemoteException ex){
             System.out.println(ex);
         }
+
         //create registry at port numnber
         try{
             registry = LocateRegistry.createRegistry(1099);
@@ -48,6 +52,7 @@ public class AEXServerGui extends Application {
         {
             System.out.println(ex);
         }
+
         //Week 7
         try{
             registry.rebind(bindingName, mockEffectenBeurs);
@@ -69,11 +74,38 @@ public class AEXServerGui extends Application {
         };
 
         timer.scheduleAtFixedRate(tt, 500, 500);
+        getListener();
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         System.out.println("got dat on lock");
         Initialize();
+    }
+    public void getListener()
+    {
+        IBanner bannerController;
+        try {
+            registry = LocateRegistry.getRegistry("localhost", 1098);
+        }
+        catch (RemoteException ex)
+        {
+            System.out.println(ex);
+        }
+        if(registry != null)
+        {
+            try{
+                bannerController = (IBanner) registry.lookup("bannerController");
+                mockEffectenBeurs.addListener(bannerController, "beurs");
+            }
+            catch (RemoteException ex)
+            {
+                System.out.println(ex);
+            }
+            catch (NotBoundException ex)
+            {
+                System.out.println(ex);
+            }
+        }
     }
 }

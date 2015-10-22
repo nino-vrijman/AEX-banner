@@ -1,5 +1,6 @@
 package AEXServer;
 
+import AEXClient.BannerController;
 import Shared.Fonds;
 import Shared.IEffectenBeurs;
 import Shared.IFonds;
@@ -7,7 +8,9 @@ import fontys.observer.BasicPublisher;
 import fontys.observer.RemotePropertyListener;
 import fontys.observer.RemotePublisher;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -54,6 +57,8 @@ public class MockEffectenBeurs extends UnicastRemoteObject implements IEffectenB
 
     @Override
     public void removeListener(RemotePropertyListener remotePropertyListener, String s) throws RemoteException {
-        publisher.removeListener(remotePropertyListener,s);
+        publisher.removeListener(remotePropertyListener, s);
     }
+
+
 }

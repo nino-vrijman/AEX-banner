@@ -5,15 +5,17 @@ import Shared.IEffectenBeurs;
 import Shared.IFonds;
 
 import java.beans.PropertyChangeEvent;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BannerController implements IBanner {
+public class BannerController extends UnicastRemoteObject implements IBanner {
 
     private AEXBanner banner;
     private Timer pollingTimer;
@@ -28,8 +30,9 @@ public class BannerController implements IBanner {
 
         // Start polling timer: update banner every two seconds
         pollingTimer = new Timer();
-
-         Client();
+        Host();
+        // opdracht week 7
+        // Client();
         // TODO
         //  Deze taak wordt elke twee seconden (2000 ms) uitgevoerd, nieuwe koersen worden gegenereerd en in de AEX-banner
         //  klasse wordt de text veranderd naar de 'actuele' koersinformatie.
@@ -41,8 +44,10 @@ public class BannerController implements IBanner {
                 String koersInfo = "";
                 DecimalFormat df = new DecimalFormat("###0.00");
                 try {
-                    for (IFonds f : effectenbeurs.getKoersen()) {
-                        koersInfo = koersInfo + f.getNaam() + " " + df.format(f.getKoers()) + " ";
+                    if (effectenbeurs != null){
+                        for (IFonds f : effectenbeurs.getKoersen()) {
+                            koersInfo = koersInfo + f.getNaam() + " " + df.format(f.getKoers()) + " ";
+                        }
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -86,6 +91,23 @@ public class BannerController implements IBanner {
             }
         }
         */
+    }
+    public void Host()
+    {
+        try {
+            registry = LocateRegistry.createRegistry(1098);
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            registry.rebind("bannerController", this);
+        } catch (AccessException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
