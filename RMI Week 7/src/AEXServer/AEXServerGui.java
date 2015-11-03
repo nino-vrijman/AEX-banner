@@ -67,7 +67,7 @@ public class AEXServerGui extends Application {
             }
         };
 
-        timer.scheduleAtFixedRate(tt, 500, 500);
+        timer.scheduleAtFixedRate(tt, 2000, 2000);
     }
 
     @Override

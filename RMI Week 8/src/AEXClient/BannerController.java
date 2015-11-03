@@ -3,6 +3,7 @@ package AEXClient;
 import AEXServer.MockEffectenBeurs;
 import Shared.IEffectenBeurs;
 import Shared.IFonds;
+import fontys.observer.RemotePublisher;
 
 import java.beans.PropertyChangeEvent;
 import java.rmi.AccessException;
@@ -12,6 +13,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,7 +23,9 @@ public class BannerController extends UnicastRemoteObject implements IBanner {
     private Timer pollingTimer;
     //week 7 registry
     private Registry registry = null;
-    private IEffectenBeurs effectenbeurs = null;
+    private RemotePublisher link = null;
+   // private IEffectenBeurs effectenbeurs = null;
+    private List<IFonds> fondsen = null;
 
     public BannerController(AEXBanner banner) throws RemoteException {
 
@@ -30,9 +34,11 @@ public class BannerController extends UnicastRemoteObject implements IBanner {
 
         // Start polling timer: update banner every two seconds
         pollingTimer = new Timer();
-        Host();
+//        Host();
+
         // opdracht week 7
-        // Client();
+        Client();
+
         // TODO
         //  Deze taak wordt elke twee seconden (2000 ms) uitgevoerd, nieuwe koersen worden gegenereerd en in de AEX-banner
         //  klasse wordt de text veranderd naar de 'actuele' koersinformatie.
@@ -41,22 +47,9 @@ public class BannerController extends UnicastRemoteObject implements IBanner {
             @Override
             public void run()
             {
-                String koersInfo = "";
-                DecimalFormat df = new DecimalFormat("###0.00");
-                try {
-                    if (effectenbeurs != null){
-                        for (IFonds f : effectenbeurs.getKoersen()) {
-                            koersInfo = koersInfo + f.getNaam() + " " + df.format(f.getKoers()) + " ";
-                        }
-                    }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                banner.setKoersen(koersInfo);
+
             }
         };
-
-        pollingTimer.scheduleAtFixedRate(tt, 2000, 2000);
     }
 
     // Stop banner controller
@@ -64,7 +57,23 @@ public class BannerController extends UnicastRemoteObject implements IBanner {
         pollingTimer.cancel();
         // Stop simulation timer of effectenbeurs
         // TODO
+        try {
+            link.removeListener(this, "beurs");
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         banner.stop();
+    }
+    public void updateBanner()
+    {
+        String koersInfo = "";
+        DecimalFormat df = new DecimalFormat("###0.00");
+            if (fondsen != null){
+                for (IFonds f : fondsen) {
+                    koersInfo = koersInfo + f.getNaam() + " " + df.format(f.getKoers()) + " ";
+                }
+            }
+        banner.setKoersen(koersInfo);
     }
     public void Client()
     {
@@ -75,11 +84,12 @@ public class BannerController extends UnicastRemoteObject implements IBanner {
         {
             System.out.println(ex);
         }
-        /*
+
         if(registry != null)
         {
             try{
-                effectenbeurs = (IEffectenBeurs) registry.lookup("beurs");
+                link = (RemotePublisher) registry.lookup("AEXServer");
+                link.addListener(this, "beurs");
             }
             catch (NotBoundException ex)
             {
@@ -90,28 +100,29 @@ public class BannerController extends UnicastRemoteObject implements IBanner {
                 System.out.println(ef);
             }
         }
-        */
-    }
-    public void Host()
-    {
-        try {
-            registry = LocateRegistry.createRegistry(1098);
-        }
-        catch (RemoteException e) {
-            e.printStackTrace();
-        }
 
-        try {
-            registry.rebind("bannerController", this);
-        } catch (AccessException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
+//    public void Host()
+//    {
+//        try {
+//            registry = LocateRegistry.createRegistry(1098);
+//        }
+//        catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            registry.rebind("bannerController", this);
+//        } catch (AccessException e) {
+//            e.printStackTrace();
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) throws RemoteException {
-        effectenbeurs = (IEffectenBeurs) propertyChangeEvent.getNewValue();
-    }
+        fondsen = ((IEffectenBeurs) propertyChangeEvent.getNewValue()).getKoersen();
+        updateBanner();
+     }
 }

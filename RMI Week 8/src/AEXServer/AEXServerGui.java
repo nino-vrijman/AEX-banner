@@ -73,8 +73,8 @@ public class AEXServerGui extends Application {
             }
         };
 
-        timer.scheduleAtFixedRate(tt, 500, 500);
-        getListener();
+        timer.scheduleAtFixedRate(tt, 2000, 2000);
+    //    getListener();
     }
 
     @Override
@@ -82,6 +82,7 @@ public class AEXServerGui extends Application {
         System.out.println("got dat on lock");
         Initialize();
     }
+    /*
     public void getListener()
     {
         IBanner bannerController;
@@ -107,5 +108,7 @@ public class AEXServerGui extends Application {
                 System.out.println(ex);
             }
         }
+
     }
+    */
 }

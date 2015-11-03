@@ -1,5 +1,7 @@
 package Shared;
 
+import java.rmi.server.UnicastRemoteObject;
+
 /**
  * Created by Kevin on 6-10-2015.
  */

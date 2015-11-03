@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.beans.PropertyChangeEvent;
 import java.rmi.NotBoundException;
@@ -100,4 +101,9 @@ public class AEXBanner extends Application  {
         animationTimer.stop();
         controller.stop();
     }
+    public void windowClosing(WindowEvent e)
+    {
+        stop();
+    }
+
 }
